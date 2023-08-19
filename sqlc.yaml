@@ -1,0 +1,14 @@
+version: 2
+sql:
+  - engine: "mysql"
+    schema: "adapter/db/playground/ddl/"
+    queries: "adapter/db/playground/ddl/"
+    gen:
+      go:
+        package: "playground"
+        out: "/adapter/db/playground/"
+        sql_driver: "github.com/go-sql-driver/mysql"
+        emit_json_tags: true
+        json_tags_case_style: "snake"
+    rules:
+      - sqlc/db-prepare
