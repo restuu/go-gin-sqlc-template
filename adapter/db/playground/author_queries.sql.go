@@ -19,7 +19,47 @@ func (q *Queries) FindAllAuthors(ctx context.Context) ([]Author, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Author
+	items := []Author{}
+	for rows.Next() {
+		var i Author
+		if err := rows.Scan(&i.ID, &i.Name); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const findAuthorByID = `-- name: FindAuthorByID :one
+SELECT id, name FROM authors
+WHERE id = ?
+`
+
+func (q *Queries) FindAuthorByID(ctx context.Context, id int64) (Author, error) {
+	row := q.db.QueryRowContext(ctx, findAuthorByID, id)
+	var i Author
+	err := row.Scan(&i.ID, &i.Name)
+	return i, err
+}
+
+const findAuthorsWithName = `-- name: FindAuthorsWithName :many
+SELECT id, name FROM authors
+WHERE name LIKE CONCAT('%', ?, '%')
+`
+
+func (q *Queries) FindAuthorsWithName(ctx context.Context, concat interface{}) ([]Author, error) {
+	rows, err := q.db.QueryContext(ctx, findAuthorsWithName, concat)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Author{}
 	for rows.Next() {
 		var i Author
 		if err := rows.Scan(&i.ID, &i.Name); err != nil {

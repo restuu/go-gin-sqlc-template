@@ -19,7 +19,7 @@ func (q *Queries) FindAllBooks(ctx context.Context) ([]Book, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Book
+	items := []Book{}
 	for rows.Next() {
 		var i Book
 		if err := rows.Scan(&i.ID, &i.Title, &i.AuthorID); err != nil {
@@ -47,7 +47,7 @@ func (q *Queries) FindBooksByAuthor(ctx context.Context, authorID int64) ([]Book
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Book
+	items := []Book{}
 	for rows.Next() {
 		var i Book
 		if err := rows.Scan(&i.ID, &i.Title, &i.AuthorID); err != nil {
@@ -70,8 +70,8 @@ VALUES (?, ?)
 `
 
 type InsertBookParams struct {
-	Title    string `json:"title"`
-	AuthorID int64  `json:"author_id"`
+	Title    string `db:"title" json:"title"`
+	AuthorID int64  `db:"author_id" json:"author_id"`
 }
 
 func (q *Queries) InsertBook(ctx context.Context, arg InsertBookParams) (int64, error) {

@@ -8,7 +8,10 @@ sql:
         package: "playground"
         out: "/adapter/db/playground/"
         sql_driver: "github.com/go-sql-driver/mysql"
+        emit_empty_slices: true
+        emit_db_tags: true
         emit_json_tags: true
         json_tags_case_style: "snake"
     rules:
       - sqlc/db-prepare
+    strict_function_checks: true
