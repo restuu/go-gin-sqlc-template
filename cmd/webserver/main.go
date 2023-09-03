@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	app, err := initApp(context.TODO(), "")
+	app, err := initApp(context.TODO())
 	if err != nil {
 		log.Fatal(err)
 	}

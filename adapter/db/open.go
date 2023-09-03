@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"go-gin-sqlc-template/domain"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -24,8 +25,8 @@ import (
 //	if err != nil {
 //	    log.Fatal(err)
 //	}
-func OpenMySQL(ctx context.Context, dsn string) (*sql.DB, error) {
-	db, err := sql.Open("mysql", dsn)
+func OpenMySQL(ctx context.Context, dbConfig domain.DBConfig) (*sql.DB, error) {
+	db, err := sql.Open("mysql", dbConfig.DSN)
 	if err != nil {
 		return nil, err
 	}

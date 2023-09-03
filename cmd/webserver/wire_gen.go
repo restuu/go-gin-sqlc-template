@@ -11,6 +11,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/google/wire"
+	"go-gin-sqlc-template/adapter/config"
 	"go-gin-sqlc-template/adapter/db"
 	"go-gin-sqlc-template/adapter/db/playground"
 	"go-gin-sqlc-template/adapter/router"
@@ -21,8 +22,14 @@ import (
 
 // Injectors from wire.go:
 
-func initApp(ctx context.Context, dsn string) (*App, error) {
-	sqlDB, err := db.OpenMySQL(ctx, dsn)
+func initApp(ctx context.Context) (*App, error) {
+	domainConfig, err := config.ReadConfig()
+	if err != nil {
+		return nil, err
+	}
+	databases := domainConfig.DB
+	dbConfig := databases.Playground
+	sqlDB, err := db.OpenMySQL(ctx, dbConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +51,7 @@ func initApp(ctx context.Context, dsn string) (*App, error) {
 // wire.go:
 
 var (
-	queryProvider = wire.NewSet(db.OpenMySQL, wire.Bind(new(playground.DBTX), new(*sql.DB)), playground.New)
+	queryPlaygroundProvider = wire.NewSet(wire.FieldsOf(new(*domain.Config), "DB"), wire.FieldsOf(new(domain.Databases), "Playground"), db.OpenMySQL, wire.Bind(new(playground.DBTX), new(*sql.DB)), playground.New)
 
 	authorUsecaseProvider = wire.NewSet(wire.Bind(new(domain.AuthorUsecase), new(*author.Usecase)), author.NewAuthorUsecase)
 

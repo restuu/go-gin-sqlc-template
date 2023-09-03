@@ -26,6 +26,9 @@ func InitHandler(usecases *domain.Usecases) http.Handler {
 		AllowHeaders: []string{
 			"X-Request-ID",
 			"X-User-ID",
+			"Authorization",
+			"Origin",
+			"User-Agent",
 		},
 	}))
 

@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"go-gin-sqlc-template/adapter/config"
 	"go-gin-sqlc-template/adapter/db"
 	"go-gin-sqlc-template/adapter/db/playground"
 	"go-gin-sqlc-template/adapter/router"
@@ -18,7 +19,9 @@ import (
 )
 
 var (
-	queryProvider = wire.NewSet(
+	queryPlaygroundProvider = wire.NewSet(
+		wire.FieldsOf(new(*domain.Config), "DB"),
+		wire.FieldsOf(new(domain.Databases), "Playground"),
 		db.OpenMySQL,
 		wire.Bind(new(playground.DBTX), new(*sql.DB)),
 		playground.New,
@@ -44,9 +47,10 @@ func serverProvider(handler http.Handler) *http.Server {
 	return server
 }
 
-func initApp(ctx context.Context, dsn string) (*App, error) {
+func initApp(ctx context.Context) (*App, error) {
 	wire.Build(
-		queryProvider,
+		config.ReadConfig,
+		queryPlaygroundProvider,
 		usecasesProvider,
 		router.InitHandler,
 		serverProvider,
