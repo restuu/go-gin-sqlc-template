@@ -7,12 +7,17 @@ package playground
 import ()
 
 type Author struct {
-	ID   int64  `db:"id" json:"id"`
+	// primary key
+	ID int64 `db:"id" json:"id"`
+	// author name
 	Name string `db:"name" json:"name"`
 }
 
 type Book struct {
-	ID       int64  `db:"id" json:"id"`
-	Title    string `db:"title" json:"title"`
-	AuthorID int64  `db:"author_id" json:"author_id"`
+	// primary key
+	ID int64 `db:"id" json:"id"`
+	// book title
+	Title string `db:"title" json:"title"`
+	// book's author reference ID
+	AuthorID int64 `db:"author_id" json:"author_id"`
 }

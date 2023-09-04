@@ -1,3 +1,10 @@
-package tools
+//go:build tools
+// +build tools
 
-//go:generate sqlc generate
+// following https://github.com/golang/go/wiki/Modules#how-can-i-track-tool-dependencies-for-a-module
+
+package main
+
+import (
+	_ "github.com/google/wire/cmd/wire"
+)
