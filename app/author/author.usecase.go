@@ -2,13 +2,14 @@ package author
 
 import (
 	"context"
+	"go-gin-sqlc-template/adapter/db"
 	"go-gin-sqlc-template/adapter/db/playground"
 	"sync"
 )
 
 // Usecase ...
 type Usecase struct {
-	queries *playground.Queries
+	queries db.QueryWrapper
 }
 
 var (
@@ -17,7 +18,7 @@ var (
 )
 
 // NewAuthorUsecase ...
-func NewAuthorUsecase(queries *playground.Queries) *Usecase {
+func NewAuthorUsecase(queries db.QueryWrapper) *Usecase {
 	authorUsecaseOnce.Do(func() {
 		authorUsecase = &Usecase{
 			queries: queries,

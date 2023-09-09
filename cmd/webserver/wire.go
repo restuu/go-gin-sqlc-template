@@ -25,6 +25,7 @@ var (
 		db.OpenMySQL,
 		wire.Bind(new(playground.DBTX), new(*sql.DB)),
 		playground.New,
+		db.WrapQuery,
 	)
 
 	authorUsecaseProvider = wire.NewSet(

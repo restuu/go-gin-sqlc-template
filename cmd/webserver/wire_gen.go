@@ -34,7 +34,8 @@ func initApp(ctx context.Context) (*App, error) {
 		return nil, err
 	}
 	queries := playground.New(sqlDB)
-	usecase := author.NewAuthorUsecase(queries)
+	queryWrapper := db.WrapQuery(sqlDB, queries)
+	usecase := author.NewAuthorUsecase(queryWrapper)
 	usecases := &domain.Usecases{
 		AuthorUsecase: usecase,
 	}
@@ -51,7 +52,7 @@ func initApp(ctx context.Context) (*App, error) {
 // wire.go:
 
 var (
-	queryPlaygroundProvider = wire.NewSet(wire.FieldsOf(new(*domain.Config), "DB"), wire.FieldsOf(new(domain.Databases), "Playground"), db.OpenMySQL, wire.Bind(new(playground.DBTX), new(*sql.DB)), playground.New)
+	queryPlaygroundProvider = wire.NewSet(wire.FieldsOf(new(*domain.Config), "DB"), wire.FieldsOf(new(domain.Databases), "Playground"), db.OpenMySQL, wire.Bind(new(playground.DBTX), new(*sql.DB)), playground.New, db.WrapQuery)
 
 	authorUsecaseProvider = wire.NewSet(wire.Bind(new(domain.AuthorUsecase), new(*author.Usecase)), author.NewAuthorUsecase)
 

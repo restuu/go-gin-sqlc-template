@@ -11,6 +11,7 @@ sql:
         emit_empty_slices: true
         emit_db_tags: true
         emit_json_tags: true
+        emit_interface: true
         json_tags_case_style: "snake"
     rules:
       - sqlc/db-prepare

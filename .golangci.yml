@@ -39,6 +39,7 @@ linters-settings:
     check-type-assertions: true
     exclude-functions:
       - (*github.com/gin-gonic/gin.Context).Error
+      - (*database/sql.Tx).Rollback
 
   exhaustive:
     # Program elements to check for exhaustiveness.
